@@ -7,19 +7,37 @@ app = typer.Typer(help="Hackathon Scraper CLI")
 
 @app.command()
 def scrape(
-    source: str = "luma",
-    limit: int = 300,
-    proxy: str | None = None,
-    output: str = "output/events.csv"
+    source: str = typer.Option("luma", help="Source to scrape from"),
+    limit: int = typer.Option(300, help="Maximum number of events to scrape"),
+    proxy: str = typer.Option(None, help="Proxy URL to use"),
+    output: str = typer.Option("output/events.csv", help="Output CSV file path")
 ):
     """Scrape hackathons from a source and save to CSV"""
+    print(f"\n🎯 Starting hackathon scraper")
+    print(f"📌 Source: {source}")
+    print(f"📊 Target events: {limit}")
+    if proxy:
+        print(f"🌐 Using proxy: {proxy}")
+
+    print("\n🔄 Initializing scraper...")
     scraper = LumaScraper(proxy=proxy)
+
+    print("\n⏳ Starting scrape process...")
     df = asyncio.run(scraper.scrape(limit))
 
     # Ensure output directory exists
-    Path(output).parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(output, index=False)
-    typer.echo(f"✅ Scraped {len(df)} events -> {output}")
+    output_path = Path(output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    print(f"\n💾 Saving results to {output_path}...")
+    df.to_csv(output_path, index=False)
+
+    print("\n📊 Summary:")
+    print(f"   • Total events: {len(df)}")
+    print(f"   • Date range: {df['date'].min()} to {df['date'].max()}")
+    print(f"   • Output file: {output_path.absolute()}")
+
+    print("\n✅ Done!")
 
 if __name__ == "__main__":
     app()
