@@ -26,15 +26,39 @@ class LumaScraper(BaseScraper):
             await page.wait_for_selector('div.content-card.hoverable.actionable', timeout=15000)
             print("✅ Page loaded successfully")
 
-            scroll_count = 0
-            last_event_count = 0
-            no_new_events_count = 0
+            # New: Loop through timeline sections
+            timeline_sections = await page.query_selector_all('div.timeline-section')
+            for section in timeline_sections:
+                # Extract the date label
+                date_label_tag = await section.query_selector('div.timeline-title.date-title')
+                if not date_label_tag:
+                    continue
+                date_label = (await date_label_tag.inner_text()).strip().lower()
 
-            while len(events) < limit and scroll_count < MAX_SCROLLS:
-                print(f"\n📊 Current progress: {len(events)}/{limit} events")
-                cards = await page.query_selector_all('div.content-card.hoverable.actionable')
-                print(f"🔍 Found {len(cards)} event cards on current page")
+                # Normalize the date label
+                today = dt.date.today()
+                if date_label == 'today':
+                    event_date = today.strftime('%Y-%m-%d')
+                elif date_label == 'tomorrow':
+                    event_date = (today + dt.timedelta(days=1)).strftime('%Y-%m-%d')
+                else:
+                    # Try to parse as weekday or full date
+                    try:
+                        # If it's a weekday, find the next occurrence
+                        weekdays = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
+                        if date_label in weekdays:
+                            days_ahead = (weekdays.index(date_label) - today.weekday() + 7) % 7
+                            if days_ahead == 0:
+                                days_ahead = 7
+                            event_date = (today + dt.timedelta(days=days_ahead)).strftime('%Y-%m-%d')
+                        else:
+                            # Try parsing as a date string
+                            event_date = str(dt.datetime.strptime(date_label, '%d %B %Y').date())
+                    except Exception:
+                        event_date = date_label  # fallback: keep as is
 
+                # Extract event cards in this section
+                cards = await section.query_selector_all('div.content-card.hoverable.actionable')
                 for idx, card in enumerate(cards):
                     # Extract event link
                     link_tag = await card.query_selector('a.event-link.content-link')
@@ -69,33 +93,15 @@ class LumaScraper(BaseScraper):
                         events.append({
                             "title": title,
                             "url": url,
-                            "date": time_text,
+                            "date": f"{event_date} {time_text}" if time_text else event_date,
                             "location": location,
                             "source": "luma"
                         })
-
-                # Check if we found any new events
-                if len(events) == last_event_count:
-                    no_new_events_count += 1
-                    if no_new_events_count >= 2:  # If no new events for 2 consecutive scrolls
-                        print("⚠️ No new events found in last 2 scrolls, stopping...")
-                        break
-                else:
-                    no_new_events_count = 0
-                    last_event_count = len(events)
-
-                # Scroll to load more
-                scroll_count += 1
-                print(f"📜 Scrolling page ({scroll_count}/{MAX_SCROLLS})...")
-                await page.mouse.wheel(0, 2000)
-                await page.wait_for_timeout(1200)
-
-                if await page.is_visible("text=No more"):
-                    print("⚠️ Reached end of page")
-                    break
 
             print("\n🔒 Closing browser...")
             await browser.close()
 
         print(f"\n✅ Scraping complete! Found {len(events)} unique hackathon events")
-        return pd.DataFrame(events)
+        df = pd.DataFrame(events)
+        df['timestamp'] = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        return df
