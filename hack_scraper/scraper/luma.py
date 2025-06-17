@@ -8,8 +8,8 @@ LUMA_URL = "https://lu.ma/ai"
 MAX_SCROLLS = 10  # Maximum number of scrolls
 
 class LumaScraper(BaseScraper):
-    async def scrape(self, limit: int = 300) -> pd.DataFrame:
-        print(f"\n🚀 Starting Lu.ma scraper (target: {limit} events)")
+    async def scrape(self, limit: int = 300, url: str = LUMA_URL) -> pd.DataFrame:
+        print(f"\n🚀 Starting Lu.ma scraper (target: {limit} events, url: {url})")
         events, seen = [], set()
 
         async with async_playwright() as p:
@@ -20,8 +20,8 @@ class LumaScraper(BaseScraper):
             )
             page = await browser.new_page()
 
-            print(f"📡 Loading {LUMA_URL}...")
-            await page.goto(LUMA_URL, timeout=60_000)
+            print(f"📡 Loading {url}...")
+            await page.goto(url, timeout=60_000)
             print("Waiting for event cards to load...")
             await page.wait_for_selector('div.content-card.hoverable.actionable', timeout=15000)
             print("✅ Page loaded successfully")
