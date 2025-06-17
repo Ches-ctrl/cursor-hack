@@ -1,0 +1,19 @@
+curl 'https://api.lu.ma/home/get-events?pagination_limit=25&period=future' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB' \
+  -H 'cache-control: no-cache' \
+  -b 'luma.auth-session-key=usr-QI8XNgjNtktOa4W.eui894gmnkzuf02014k6; __stripe_mid=c263ff9c-804e-4c41-b8a0-de423455c849bd1c63; luma.evt-ohaH94vj33IfYsv.referred_by=CkGNTD; luma.evt-PSX9EvHi2bbz4CR.referred_by=QfLvv4; luma.evt-0PS9kaQwt68JpbX.referred_by=TWHoQ8; luma.evt-il3OcllDqFQK6s4.referred_by=m44pcv; luma.evt-yoKKqP8TUeWWtdh.referred_by=1hNMGW; luma.evt-ndDOKtau4bZTq67.referred_by=NI7a9Y; luma.evt-qMgbqTvp4bM2tX7.referred_by=L6Qqsm; luma.evt-rsZPunlrh5DprPb.registered-with=usr-QI8XNgjNtktOa4W; luma.evt-PLruqQbgCsrIcC8.registered-with=usr-QI8XNgjNtktOa4W; luma.evt-s9ekcMKj4EVAE5c.registered-with=usr-QI8XNgjNtktOa4W; luma.evt-wZSKDnN7OrtOZVf.registered-with=usr-QI8XNgjNtktOa4W; luma.evt-q4HkfW4UjE9BhvD.registered-with=usr-QI8XNgjNtktOa4W; luma.evt-7AfHSGOBmoz4iLO.registered-with=usr-QI8XNgjNtktOa4W; luma.evt-VnHPRKSwzXa4jZI.registered-with=usr-QI8XNgjNtktOa4W; luma.evt-rsZPunlrh5DprPb.referred_by=nodPrh; luma.evt-YJV7u4SZFMkdw1Y.registered-with=usr-QI8XNgjNtktOa4W; luma.evt-YwhdmevxvnFUFEF.referred_by=Pa6ZYJ; luma.did=1u27j5w6g21csiqvdjnkatpawfs9g2; luma.first-page=%2F7qtqztgl; luma.native-referrer=https%3A%2F%2Fl.threads.com%2F; __cf_bm=vkMX4ZltNFt6S_fxf7IwKvVFXsgGFmsIIQmNO0F8Xr0-1750183735-1.0.1.1-xSd5HqgHKIhYQ0lfMOM88tipE0uJ7wL0bNcg72r_nKiLrefiXn067BR9u30ThRfmZLrAW8Tt984p8lrUH7za7LAenHz.e823UMM0BBXAuuo' \
+  -H 'origin: https://lu.ma' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://lu.ma/' \
+  -H 'sec-ch-ua: "Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36' \
+  -H 'x-luma-client-type: luma-web' \
+  -H 'x-luma-client-version: 76fc9cdddeac3ca6224bd9b56ab0fabbc2601ff5' \
+  -H 'x-luma-web-url: https://lu.ma/home'

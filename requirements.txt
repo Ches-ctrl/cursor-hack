@@ -1,0 +1,5 @@
+playwright==1.44.*
+pandas
+typer[all]
+python-dotenv
+python-dateutil
