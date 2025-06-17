@@ -4,3 +4,4 @@ typer[all]
 python-dotenv
 python-dateutil
 twilio
+firecrawl-py
