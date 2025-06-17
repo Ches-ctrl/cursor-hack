@@ -121,7 +121,7 @@ class LumaScraper(BaseScraper):
                             "title": title,
                             "url": url,
                             "date": event_date_obj.strftime('%Y-%m-%d') if event_date_obj else '',
-                            "location": location,
+                            "location": f"{location}",
                             "source": "luma"
                         })
 

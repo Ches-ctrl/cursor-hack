@@ -3,17 +3,18 @@ import typer
 from pathlib import Path
 from .scraper.luma import LumaScraper
 from datetime import datetime
+from hack_scraper.whatsapp import send_whatsapp_summary
 
 app = typer.Typer(help="Hackathon Scraper CLI")
 
 @app.command()
 def scrape(
     source: str = typer.Option("luma", help="Source to scrape from"),
-    limit: int = typer.Option(300, help="Maximum number of events to scrape"),
+    limit: int = typer.Option(20, help="Maximum number of events to scrape"),
     proxy: str = typer.Option(None, help="Proxy URL to use"),
-    output: str = typer.Option("output/events.csv", help="Output CSV file path")
+    output: str = typer.Option("output/events.csv", help="Output CSV file path"),
 ):
-    """Scrape hackathons from a source and save to CSV"""
+    """Scrape hackathons from a source and save to CSV."""
     print(f"\n🎯 Starting hackathon scraper")
     print(f"📌 Source: {source}")
     print(f"📊 Target events: {limit}")
@@ -42,6 +43,20 @@ def scrape(
     print(f"   • Output file: {output_path.absolute()}")
 
     print("\n✅ Done!")
+
+@app.command()
+def send_whatsapp(
+    csv_file: str = typer.Argument(..., help="Path to the events CSV file"),
+    whatsapp_to: str = typer.Argument(..., help="WhatsApp number to send summary to (e.g. whatsapp:+1234567890)")
+):
+    """Send a WhatsApp summary of events from a CSV file."""
+    import pandas as pd
+    print(f"\n📂 Reading events from {csv_file}...")
+    df = pd.read_csv(csv_file)
+    events = df.to_dict(orient="records")
+    print(f"\n📲 Sending WhatsApp summary to {whatsapp_to}...")
+    send_whatsapp_summary(events, whatsapp_to)
+    print("\n✅ WhatsApp summary sent!")
 
 if __name__ == "__main__":
     app()
