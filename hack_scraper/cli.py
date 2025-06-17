@@ -2,6 +2,7 @@ import asyncio
 import typer
 from pathlib import Path
 from .scraper.luma import LumaScraper
+from datetime import datetime
 
 app = typer.Typer(help="Hackathon Scraper CLI")
 
@@ -27,6 +28,9 @@ def scrape(
 
     # Ensure output directory exists
     output_path = Path(output)
+    if output == "output/events.csv":
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        output_path = output_path.parent / f"events_{timestamp}.csv"
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     print(f"\n💾 Saving results to {output_path}...")

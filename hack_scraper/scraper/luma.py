@@ -37,25 +37,38 @@ class LumaScraper(BaseScraper):
 
                 # Normalize the date label
                 today = dt.date.today()
-                if date_label == 'today':
-                    event_date = today.strftime('%Y-%m-%d')
-                elif date_label == 'tomorrow':
-                    event_date = (today + dt.timedelta(days=1)).strftime('%Y-%m-%d')
-                else:
-                    # Try to parse as weekday or full date
-                    try:
-                        # If it's a weekday, find the next occurrence
+                event_date_obj = None
+                # Split the date label on newlines and spaces, and try to parse each part
+                date_label_parts = [part.strip().lower() for part in re.split(r'[\n,]+', date_label) if part.strip()]
+                for part in date_label_parts:
+                    if part == 'today':
+                        event_date_obj = today
+                        break
+                    elif part == 'tomorrow':
+                        event_date_obj = today + dt.timedelta(days=1)
+                        break
+                    else:
                         weekdays = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
-                        if date_label in weekdays:
-                            days_ahead = (weekdays.index(date_label) - today.weekday() + 7) % 7
+                        if part in weekdays:
+                            days_ahead = (weekdays.index(part) - today.weekday() + 7) % 7
                             if days_ahead == 0:
                                 days_ahead = 7
-                            event_date = (today + dt.timedelta(days=days_ahead)).strftime('%Y-%m-%d')
-                        else:
-                            # Try parsing as a date string
-                            event_date = str(dt.datetime.strptime(date_label, '%d %B %Y').date())
-                    except Exception:
-                        event_date = date_label  # fallback: keep as is
+                            event_date_obj = today + dt.timedelta(days=days_ahead)
+                            break
+                        # Try parsing as a date string (e.g., 'jun 19')
+                        try:
+                            event_date_obj = dt.datetime.strptime(part, '%b %d').replace(year=today.year).date()
+                            break
+                        except Exception:
+                            pass
+                        try:
+                            event_date_obj = dt.datetime.strptime(part, '%d %B %Y').date()
+                            break
+                        except Exception:
+                            pass
+                # If still not found, fallback to empty string
+                if event_date_obj is None:
+                    event_date_obj = dt.date.today()
 
                 # Extract event cards in this section
                 cards = await section.query_selector_all('div.content-card.hoverable.actionable')
@@ -78,6 +91,20 @@ class LumaScraper(BaseScraper):
                     # Extract event time
                     time_tag = await card.query_selector('div.event-time.flex-center.gap-2')
                     time_text = await time_tag.inner_text() if time_tag else None
+                    # Parse and combine date and time
+                    event_datetime_str = None
+                    if event_date_obj and time_text:
+                        # Try to parse time (e.g., '6:00 PM')
+                        try:
+                            event_time_obj = dt.datetime.strptime(time_text.strip(), '%I:%M %p').time()
+                            event_datetime = dt.datetime.combine(event_date_obj, event_time_obj)
+                            event_datetime_str = event_datetime.strftime('%Y-%m-%d %H:%M')
+                        except Exception:
+                            event_datetime_str = event_date_obj.strftime('%Y-%m-%d')
+                    elif event_date_obj:
+                        event_datetime_str = event_date_obj.strftime('%Y-%m-%d')
+                    else:
+                        event_datetime_str = date_label  # fallback
 
                     # Extract location
                     location_tag = await card.query_selector('div.info.flex-1.flex-column')
@@ -93,7 +120,7 @@ class LumaScraper(BaseScraper):
                         events.append({
                             "title": title,
                             "url": url,
-                            "date": f"{event_date} {time_text}" if time_text else event_date,
+                            "date": event_date_obj.strftime('%Y-%m-%d') if event_date_obj else '',
                             "location": location,
                             "source": "luma"
                         })
@@ -103,5 +130,4 @@ class LumaScraper(BaseScraper):
 
         print(f"\n✅ Scraping complete! Found {len(events)} unique hackathon events")
         df = pd.DataFrame(events)
-        df['timestamp'] = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         return df
