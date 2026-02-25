@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Tony - Unicorn Mafia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #718096;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .whatsapp-button {
+            display: inline-block;
+            background: #25D366;
+            color: white;
+            text-decoration: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+        }
+
+        .whatsapp-button:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+        }
+
+        .whatsapp-button::before {
+            content: "💬 ";
+            margin-right: 8px;
+        }
+
+        .credits {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .wassist-logo {
+            font-size: 14px;
+            color: #a0aec0;
+            margin-bottom: 15px;
+        }
+
+        .wassist-logo a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .wassist-logo a:hover {
+            text-decoration: underline;
+        }
+
+        .developer {
+            font-size: 13px;
+            color: #a0aec0;
+        }
+
+        .developer strong {
+            color: #4a5568;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .whatsapp-button {
+                padding: 16px 35px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">BT</div>
+        
+        <h1>Big Tony</h1>
+        <p class="subtitle">
+            Your gateway to the Unicorn Mafia community.<br>
+            Got what it takes? Let's talk.
+        </p>
+
+        <a href="https://wa.me/447488895960?text=i%27ve%20got%20what%20it%20takes" 
+           class="whatsapp-button" 
+           target="_blank" 
+           rel="noopener noreferrer">
+            Message Big Tony
+        </a>
+
+        <div class="credits">
+            <div class="wassist-logo">
+                Powered by <a href="https://wassist.app" target="_blank" rel="noopener noreferrer">Wassist</a>
+            </div>
+            <div class="developer">
+                Developed with ❤️ by <strong>Josh Warwick</strong>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
