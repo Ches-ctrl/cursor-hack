@@ -6,3 +6,4 @@ python-dateutil
 twilio
 firecrawl-py
 serpapi
+flask
